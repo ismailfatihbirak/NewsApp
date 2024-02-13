@@ -13,7 +13,9 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.colorResource
 import androidx.core.view.WindowCompat
+import com.example.newsapp.R
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -53,11 +55,12 @@ fun NewsAppTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+    val statusBarRenk = colorResource(id = R.color.white).toArgb()
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = statusBarRenk
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
