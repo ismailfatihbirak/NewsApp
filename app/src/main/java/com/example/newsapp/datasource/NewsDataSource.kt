@@ -15,6 +15,10 @@ class NewsDataSource(var srcv:Service) {
         withContext(Dispatchers.IO){
             return@withContext srcv.getCategoryNews("us",category,"2f51a55fb7ee4d6690c5b23bb6a1889e").articles
         }
+    suspend fun LatestNewsAll() : List<Article> =
+        withContext(Dispatchers.IO){
+            return@withContext srcv.getNews().articles
+        }
 
 
 

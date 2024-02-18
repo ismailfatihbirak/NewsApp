@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -35,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -54,11 +56,19 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.newsapp.ui.theme.NewsAppTheme
 import com.example.newsapp.viewmodel.HomePageViewModel
+import com.example.newsapp.viewmodel.LatestNewsAllViewModel
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -68,23 +78,38 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             NewsAppTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HomePage()
+                    PageTransations()
                 }
             }
         }
     }
 }
+@Composable
+fun PageTransations() {
+    val navController = rememberNavController()
+    NavHost(navController, startDestination = "homepage") {
+        composable("homepage") { backStackEntry ->
+            val viewModel = hiltViewModel<HomePageViewModel>()
+            HomePage(navController, viewModel)
+        }
+        composable("latestnewsall") { backStackEntry ->
+            val viewModel = hiltViewModel<LatestNewsAllViewModel>()
+            LatestNewsAll(navController,viewModel)
+        }
+    }
+}
+
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
-fun HomePage() {
-    val viewModel: HomePageViewModel = viewModel()
+fun HomePage(navController: NavController,viewModel: HomePageViewModel) {
+    //val viewModel: HomePageViewModel = viewModel()
     val latestNewsList = viewModel.latestNewsList.observeAsState(listOf())
     val categoryNewsList = viewModel.categoryNewsList.observeAsState(listOf())
     val categories = listOf("health", "technology", "sports", "science", "business", "entertainment")
@@ -120,7 +145,11 @@ fun HomePage() {
 
                     }, horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically)
                     {
-                        Text(text = "See all", fontSize = 12.sp, color = Color(0xFF0080FF))
+                        TextButton(onClick = {
+                           navController.navigate("latestnewsall")
+                        }) {
+                            Text(text = "See all", fontSize = 12.sp, color = Color(0xFF0080FF))
+                        }
                         Spacer(modifier = Modifier.size(8.dp))
                         Image(painter = painterResource(id = R.drawable.combined_shape), contentDescription ="" , modifier = Modifier.size(12.dp))
                     }

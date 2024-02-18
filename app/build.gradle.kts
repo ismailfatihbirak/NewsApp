@@ -73,13 +73,31 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation ("com.google.accompanist:accompanist-flowlayout:0.17.0")
 
-    //viewmodel
-    implementation ("androidx.navigation:navigation-compose:2.8.0-alpha02")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+
+
+
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
     implementation ("androidx.compose.runtime:runtime-livedata:1.7.0-alpha02")
 
     implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
+
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation("androidx.hilt:hilt-work:1.1.0")
+    kapt("androidx.hilt:hilt-compiler:1.1.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+
 }
+
+
+
+
+
