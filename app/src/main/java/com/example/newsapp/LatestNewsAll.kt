@@ -43,12 +43,13 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.newsapp.viewmodel.HomePageViewModel
 import com.example.newsapp.viewmodel.LatestNewsAllViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun LatestNewsAll(navController: NavController,viewModel: LatestNewsAllViewModel) {
-    //val viewModel : LatestNewsAllViewModel = viewModel()
     val latestNewsAllList = viewModel.latestNewsAllList.observeAsState(listOf())
     Scaffold(
         topBar = {
@@ -77,44 +78,59 @@ fun LatestNewsAll(navController: NavController,viewModel: LatestNewsAllViewModel
                 })
         },
         ){ innerPadding ->
-        LazyColumn(modifier = Modifier
-            .padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp),){
+        LazyColumn(
+            modifier = Modifier.padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
             items(
                 count = latestNewsAllList.value!!.count(),
                 itemContent = {
                     val new = latestNewsAllList.value!![it]
-                    Card(modifier = Modifier
-                        .height(350.dp)
-                        .padding(all = 10.dp),
+                    Card(
+                        modifier = Modifier
+                            .height(350.dp)
+                            .padding(all = 10.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = Color.White,
-                        )) {
-                        Column (){
+                        )
+                    ) {
+                        Column(modifier = Modifier.clickable {
+                            navController.navigate("newsdetail/${URLEncoder.encode(new.url, StandardCharsets.UTF_8.toString())}")
+                        }) {
                             val url = new.urlToImage
-                            GlideImage(model = url, contentDescription = "", modifier = Modifier
-                                .aspectRatio(16f/9f))
-                            Text(text = new.publishedAt.dropLast(10)?:"removed date",
+                            GlideImage(
+                                model = url,
+                                contentDescription = "",
+                                modifier = Modifier.aspectRatio(16f/9f)
+                            )
+                            Text(
+                                text = new.publishedAt.dropLast(10) ?: "removed date",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Light
                             )
                             Spacer(modifier = Modifier.height(4.dp))
-                            Text(text = new.title?:"removed title",
+                            Text(
+                                text = new.title ?: "removed title",
                                 fontSize = 14.sp,
-                                fontWeight = FontWeight.SemiBold)
+                                fontWeight = FontWeight.SemiBold
+                            )
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text(text = new.description?:"removed descrption",
-                                fontSize = 14.sp)
+                            Text(
+                                text = new.description ?: "removed description",
+                                fontSize = 14.sp
+                            )
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text(text = "Published By ${new.author}",
+                            Text(
+                                text = "Published By ${new.author}",
                                 fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold)
+                                fontWeight = FontWeight.Bold
+                            )
                         }
-
                     }
                 }
             )
         }
+
     }
 
 }
